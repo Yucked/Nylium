@@ -1,19 +1,54 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <PageTitle>Nylium.Frontend</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div class="rounded-lg shadow bg-base-200 drawer drawer-mobile min-h-screen">
+    <input id="drawer-toggler" type="checkbox" class="drawer-toggle">
+    <div class="flex flex-col items-center drawer-content">
+        <div class="w-full navbar bg-base-300">
+            <div class="flex-none lg:hidden">
+                <label for="drawer-toggler" class="btn btn-square btn-ghost">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </label>
+            </div>
+
+            <div class="flex-1 px-2 mx-2">
+                <span>
+                    Nylium
+                </span>
+            </div>
+
+            <div class="flex-none hidden lg:block">
+                <ul class="menu horizontal">
+                    <li>
+                        <a class="rounded-btn">Item 1</a>
+                    </li>
+                    <li>
+                        <a class="rounded-btn">Item 2</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="hidden text-xs text-center lg:block">
+            @Body
+        </div>
+        <div class="text-xs text-center lg:hidden">
+            Menu can be toggled on mobile size.
+            <br>Resize the browser to see fixed sidebar on desktop size
+        </div>
     </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    <div class="drawer-side">
+        <label for="my-drawer-3" class="drawer-overlay"></label>
+        <ul class="p-4 overflow-y-auto menu w-80 bg-base-100">
+            <li>
+                <a>Item 1</a>
+            </li>
+            <li>
+                <a>Item 2</a>
+            </li>
+        </ul>
+    </div>
 </div>
