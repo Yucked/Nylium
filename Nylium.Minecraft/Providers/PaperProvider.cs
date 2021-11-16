@@ -1,6 +1,7 @@
 namespace Nylium.Minecraft.Providers;
+
 /// <inheritdoc />
-public record PaperProvider : IServerProvider {
+public sealed class PaperProvider : IServerProvider {
     /// <inheritdoc />
     public string Url
         => "https://papermc.io/js/downloads.js";
@@ -8,11 +9,11 @@ public record PaperProvider : IServerProvider {
     /// <summary>
     /// 
     /// </summary>
-    public string LegacyBuilds
+    public static string LegacyBuilds
         => "https://papermc.io/legacy#Paper";
 
     /// <inheritdoc />
-    public ValueTask<IEnumerable<Release>> GetReleasesAsync() {
+    public ValueTask<IEnumerable<Release>?> GetReleasesAsync() {
         throw new NotImplementedException();
     }
 }

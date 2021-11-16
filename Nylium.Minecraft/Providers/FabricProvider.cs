@@ -1,18 +1,24 @@
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Nylium.Minecraft.Providers;
+
 /// <inheritdoc />
-public record FabricProvider : IServerProvider {
+public sealed class FabricProvider : IServerProvider {
     /// <inheritdoc />
     public string Url
         => "https://api.github.com/repos/FabricMC/fabric/releases";
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<FabricProvider> _logger;
-    
-    /// <inheritdoc />
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="httpClient"></param>
+    /// <param name="logger"></param>
     public FabricProvider(HttpClient httpClient, ILogger<FabricProvider> logger) {
         _httpClient = httpClient;
         _logger = logger;

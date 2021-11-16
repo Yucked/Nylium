@@ -1,3 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
+
+html, body {
+    -webkit-font-smoothing: auto;
+    font-family: 'Neucha', cursive;
+}
+
+.drawer-overlay {
+    background-color: hsla(190 50% 94% / 1) !important;
+}
+
+*::-webkit-scrollbar {
+    width: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    border: 3px solid #e1d8d8;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
