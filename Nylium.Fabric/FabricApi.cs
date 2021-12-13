@@ -64,7 +64,7 @@ public sealed class FabricApi {
     /// <param name="loaderVersion"></param>
     /// <returns></returns>
     public Task<FabricGameLoader> GetLoaderZipAsync(string gameVersion, string loaderVersion) {
-        return GetJsonAsync<FabricGameLoader>($"loader/{gameVersion}/{loaderVersion}");
+        return GetJsonAsync<FabricGameLoader>($"loader/{gameVersion}/{loaderVersion}/profile/zip");
     }
 
     /// <summary>
@@ -93,14 +93,35 @@ public sealed class FabricApi {
     /// <param name="gameVersion"></param>
     /// <param name="loaderVersion"></param>
     /// <param name="installerVersion"></param>
+    /// <returns></returns>
+    public static string GetDownloadUrl(string gameVersion, string loaderVersion, string installerVersion) {
+        return $"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/{installerVersion}/server/jar";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="loaderVersion"></param>
+    /// <param name="installerVersion"></param>
+    /// <returns></returns>
+    public static string GetServerFileName(string gameVersion, string loaderVersion, string installerVersion) {
+        return $"Fabric_{gameVersion}_{loaderVersion}_{installerVersion}.jar";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="loaderVersion"></param>
+    /// <param name="installerVersion"></param>
     /// <param name="savePath"></param>
-    public async Task GetServerJarAsync(string gameVersion,
-                                        string loaderVersion,
-                                        string installerVersion,
+    public async Task GetServerJarAsync(string gameVersion, string loaderVersion, string installerVersion,
                                         string? savePath = default) {
         using var requestMessage = new HttpRequestMessage(HttpMethod.Get,
-            $"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/{installerVersion}/server/jar");
+            GetDownloadUrl(gameVersion, loaderVersion, installerVersion));
         using var responseMessage = await _httpClient.SendAsync(requestMessage);
+
         if (!responseMessage.IsSuccessStatusCode) {
             _logger.LogError("Response code returned {Code} with reason: {Reason}",
                 responseMessage.StatusCode, responseMessage.ReasonPhrase);
@@ -108,7 +129,7 @@ public sealed class FabricApi {
         }
 
         await using var fileStream =
-            File.OpenWrite(savePath ?? $"Fabric_{gameVersion}_{loaderVersion}_{installerVersion}.jar");
+            File.OpenWrite(savePath ?? GetServerFileName(gameVersion, loaderVersion, installerVersion));
         using var content = responseMessage.Content;
         await content.CopyToAsync(fileStream);
         await fileStream.FlushAsync();
