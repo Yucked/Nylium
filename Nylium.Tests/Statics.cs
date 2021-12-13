@@ -13,6 +13,7 @@ internal readonly record struct Statics {
         .AddSingleton<HttpClient>()
         .AddSingleton<FabricProvider>()
         .AddSingleton<FabricApi>()
+        .AddSingleton<PaperProvider>()
         .AddSingleton<VanillaProvider>()
         .BuildServiceProvider();
 
