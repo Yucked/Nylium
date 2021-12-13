@@ -6,8 +6,7 @@ namespace Nylium.Minecraft;
 /// <param name="Version"></param>
 /// <param name="DownloadUrl"></param>
 /// <param name="ReleasedOn"></param>
-public record struct Release(Version Version, string DownloadUrl,
-    DateTimeOffset ReleasedOn);
+public record struct Release(Version Version, string DownloadUrl, DateTimeOffset ReleasedOn);
 
 /// <summary>
 /// 
