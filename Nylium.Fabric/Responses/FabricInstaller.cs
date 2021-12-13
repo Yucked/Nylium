@@ -1,4 +1,4 @@
-﻿namespace Nylium.Fabric;
+﻿namespace Nylium.Fabric.Responses;
 
 /// <summary>
 /// 
