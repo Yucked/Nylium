@@ -17,6 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Nylium.Fabric\Nylium.Fabric.csproj" />
 		<ProjectReference Include="..\Nylium.Minecraft\Nylium.Minecraft.csproj" />
 	</ItemGroup>
 

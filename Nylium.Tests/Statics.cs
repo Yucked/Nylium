@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nylium.Minecraft.Providers;
 using System;
 using System.Net.Http;
+using Nylium.Fabric;
 
 namespace Nylium.Tests;
 internal readonly record struct Statics {
@@ -11,6 +12,7 @@ internal readonly record struct Statics {
         .AddLogging()
         .AddSingleton<HttpClient>()
         .AddSingleton<FabricProvider>()
+        .AddSingleton<FabricApi>()
         .AddSingleton<VanillaProvider>()
         .BuildServiceProvider();
 
