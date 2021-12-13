@@ -11,6 +11,7 @@ internal readonly record struct Statics {
         .AddLogging()
         .AddSingleton<HttpClient>()
         .AddSingleton<FabricProvider>()
+        .AddSingleton<VanillaProvider>()
         .BuildServiceProvider();
 
     public static T GetService<T>() {

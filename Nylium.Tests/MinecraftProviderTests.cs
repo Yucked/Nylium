@@ -12,4 +12,11 @@ public sealed class MinecraftProviderTests {
         var releases = await provider.GetReleasesAsync();
         Assert.IsNotNull(releases);
     }
+
+    [TestMethod]
+    public async Task VanillaReleasesTest() {
+        var provider = Statics.GetService<VanillaProvider>();
+        var releases = await provider.GetReleasesAsync();
+        Assert.IsNotNull(releases);
+    }
 }
