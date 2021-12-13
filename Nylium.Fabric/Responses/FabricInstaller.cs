@@ -1,4 +1,6 @@
-﻿namespace Nylium.Fabric.Responses;
+﻿using System.Text.Json.Serialization;
+
+namespace Nylium.Fabric.Responses;
 
 /// <summary>
 /// 
@@ -7,4 +9,7 @@
 /// <param name="Maven"></param>
 /// <param name="Version"></param>
 /// <param name="IsStable"></param>
-public readonly record struct FabricInstaller(string Url, string Maven, string Version, bool IsStable);
+public readonly record struct FabricInstaller(string Url,
+                                              string Maven,
+                                              string Version,
+                                              [property: JsonPropertyName("stable")] bool IsStable);
