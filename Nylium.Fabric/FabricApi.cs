@@ -17,7 +17,7 @@ public sealed class FabricApi {
     private readonly ILogger<FabricApi> _logger;
 
     private static readonly JsonSerializerOptions Defaults = new() {
-        PropertyNameCaseInsensitive = false
+        PropertyNameCaseInsensitive = true
     };
 
     /// <summary>
@@ -34,8 +34,8 @@ public sealed class FabricApi {
     /// 
     /// </summary>
     /// <returns></returns>
-    public Task<IReadOnlyCollection<FabricLoader>?> GetLoadersAsync() {
-        return GetJsonAsync<IReadOnlyCollection<FabricLoader>>("loader");
+    public Task<IReadOnlyList<FabricLoader>?> GetLoadersAsync() {
+        return GetJsonAsync<IReadOnlyList<FabricLoader>>("loader");
     }
 
     /// <summary>
@@ -43,8 +43,8 @@ public sealed class FabricApi {
     /// </summary>
     /// <param name="gameVersion"></param>
     /// <returns></returns>
-    public Task<IReadOnlyCollection<FabricGameLoader>?> GetLoadersAsync(string gameVersion) {
-        return GetJsonAsync<IReadOnlyCollection<FabricGameLoader>>($"loader/{gameVersion}");
+    public Task<IReadOnlyList<FabricGameLoader>?> GetLoadersAsync(string gameVersion) {
+        return GetJsonAsync<IReadOnlyList<FabricGameLoader>>($"loader/{gameVersion}");
     }
 
     /// <summary>
@@ -53,8 +53,86 @@ public sealed class FabricApi {
     /// <param name="gameVersion"></param>
     /// <param name="loaderVersion"></param>
     /// <returns></returns>
-    public Task<FabricGameLoader> GetLoadersAsync(string gameVersion, string loaderVersion) {
+    public Task<FabricGameLoader> GetLoaderAsync(string gameVersion, string loaderVersion) {
         return GetJsonAsync<FabricGameLoader>($"loader/{gameVersion}/{loaderVersion}");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="loaderVersion"></param>
+    /// <returns></returns>
+    public Task<FabricGameLoader> GetLoaderZipAsync(string gameVersion, string loaderVersion) {
+        return GetJsonAsync<FabricGameLoader>($"loader/{gameVersion}/{loaderVersion}");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="loaderVersion"></param>
+    /// <returns></returns>
+    public Task<FabricGameLoader> GetLoaderProfileAsync(string gameVersion, string loaderVersion) {
+        return GetJsonAsync<FabricGameLoader>($"loader/{gameVersion}/{loaderVersion}/profile/json");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="loaderVersion"></param>
+    /// <returns></returns>
+    public Task<FabricGameLoader> GetLoaderServerAsync(string gameVersion, string loaderVersion) {
+        return GetJsonAsync<FabricGameLoader>($"loader/{gameVersion}/{loaderVersion}/server/json");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="loaderVersion"></param>
+    /// <param name="installerVersion"></param>
+    /// <param name="savePath"></param>
+    public async Task GetServerJarAsync(string gameVersion,
+                                        string loaderVersion,
+                                        string installerVersion,
+                                        string? savePath = default) {
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Get,
+            $"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/{installerVersion}/server/jar");
+        using var responseMessage = await _httpClient.SendAsync(requestMessage);
+        if (!responseMessage.IsSuccessStatusCode) {
+            _logger.LogError("Response code returned {Code} with reason: {Reason}",
+                responseMessage.StatusCode, responseMessage.ReasonPhrase);
+            throw new Exception(responseMessage.ReasonPhrase);
+        }
+
+        await using var fileStream =
+            File.OpenWrite(savePath ?? $"Fabric_{gameVersion}_{loaderVersion}_{installerVersion}.jar");
+        using var content = responseMessage.Content;
+        await content.CopyToAsync(fileStream);
+        await fileStream.FlushAsync();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameVersion"></param>
+    /// <param name="path"></param>
+    public async Task GetLatestJarAsync(string gameVersion, string? path = default) {
+        var installers = await GetInstallersAsync();
+        var loaders = await GetLoadersAsync(gameVersion);
+        await GetServerJarAsync(gameVersion,
+            loaders![0].Loader.Version,
+            installers![0].Version, path);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public Task<IReadOnlyList<FabricInstaller>?> GetInstallersAsync() {
+        return GetJsonAsync<IReadOnlyList<FabricInstaller>>("installer");
     }
 
     /// <summary>
