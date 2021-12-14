@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using Nylium.Common;
 using Nylium.Fabric.Responses;
 
@@ -15,7 +14,6 @@ public sealed class FabricApi {
     public const string META_BASE_URL = "https://meta.fabricmc.net/v2/versions";
 
     private readonly HttpClient _httpClient;
-    private readonly ILogger<FabricApi> _logger;
 
     private static readonly JsonSerializerOptions Defaults = new() {
         PropertyNameCaseInsensitive = true
@@ -25,10 +23,8 @@ public sealed class FabricApi {
     /// 
     /// </summary>
     /// <param name="httpClient"></param>
-    /// <param name="logger"></param>
-    public FabricApi(HttpClient httpClient, ILogger<FabricApi> logger) {
+    public FabricApi(HttpClient httpClient) {
         _httpClient = httpClient;
-        _logger = logger;
     }
 
     /// <summary>
@@ -45,7 +41,8 @@ public sealed class FabricApi {
     /// <param name="gameVersion"></param>
     /// <returns></returns>
     public Task<IReadOnlyList<FabricGameLoader>?> GetLoadersAsync(string gameVersion) {
-        return _httpClient.GetJsonAsync<IReadOnlyList<FabricGameLoader>>($"{META_BASE_URL}/loader/{gameVersion}", Defaults);
+        return _httpClient.GetJsonAsync<IReadOnlyList<FabricGameLoader>>($"{META_BASE_URL}/loader/{gameVersion}",
+            Defaults);
     }
 
     /// <summary>
@@ -55,7 +52,8 @@ public sealed class FabricApi {
     /// <param name="loaderVersion"></param>
     /// <returns></returns>
     public Task<FabricGameLoader> GetLoaderAsync(string gameVersion, string loaderVersion) {
-        return _httpClient.GetJsonAsync<FabricGameLoader>($"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}", Defaults);
+        return _httpClient.GetJsonAsync<FabricGameLoader>($"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}",
+            Defaults);
     }
 
     /// <summary>
@@ -65,7 +63,8 @@ public sealed class FabricApi {
     /// <param name="loaderVersion"></param>
     /// <returns></returns>
     public Task<FabricGameLoader> GetLoaderZipAsync(string gameVersion, string loaderVersion) {
-        return _httpClient.GetJsonAsync<FabricGameLoader>($"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/profile/zip", Defaults);
+        return _httpClient.GetJsonAsync<FabricGameLoader>(
+            $"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/profile/zip", Defaults);
     }
 
     /// <summary>
@@ -74,8 +73,9 @@ public sealed class FabricApi {
     /// <param name="gameVersion"></param>
     /// <param name="loaderVersion"></param>
     /// <returns></returns>
-    public Task<FabricGameLoader>? GetLoaderProfileAsync(string gameVersion, string loaderVersion) {
-        return _httpClient.GetJsonAsync<FabricGameLoader>($"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/profile/json", Defaults);
+    public Task<FabricGameLoader> GetLoaderProfileAsync(string gameVersion, string loaderVersion) {
+        return _httpClient.GetJsonAsync<FabricGameLoader>(
+            $"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/profile/json", Defaults);
     }
 
     /// <summary>
@@ -85,7 +85,8 @@ public sealed class FabricApi {
     /// <param name="loaderVersion"></param>
     /// <returns></returns>
     public Task<FabricGameLoader> GetLoaderServerAsync(string gameVersion, string loaderVersion) {
-        return _httpClient.GetJsonAsync<FabricGameLoader>($"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/server/json", Defaults);
+        return _httpClient.GetJsonAsync<FabricGameLoader>(
+            $"{META_BASE_URL}/loader/{gameVersion}/{loaderVersion}/server/json", Defaults);
     }
 
     /// <summary>
@@ -96,7 +97,7 @@ public sealed class FabricApi {
     /// <param name="installerVersion"></param>
     /// <param name="savePath"></param>
     public Task GetServerJarAsync(string gameVersion, string loaderVersion, string installerVersion,
-                                        string? savePath = default) {
+                                  string? savePath = default) {
         return _httpClient.DownloadAsync(
             GetDownloadUrl(gameVersion, loaderVersion, installerVersion),
             savePath ?? GetServerFileName(gameVersion, loaderVersion, installerVersion));
