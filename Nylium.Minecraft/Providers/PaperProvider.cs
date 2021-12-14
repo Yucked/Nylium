@@ -29,17 +29,8 @@ public sealed class PaperProvider : IServerProvider {
         var releases = new List<Release>();
         var versions = await GetVersionsAsync();
         await Parallel.ForEachAsync(versions, async (version, _) => {
-
             var builds = await GetBuildsAsync(version);
-            await Parallel.ForEachAsync(builds, async (build, _) => {
-                var baseUrl = $"{API_URL}/versions/{version}/builds/{build}";
-                var element = await _httpClient.GetJsonAsync(baseUrl);
-                var downloadName = element
-                    .GetProperty("downloads")
-                    .GetProperty("application")
-                    .GetProperty("name")
-                    .GetString();
-
+            await Parallel.ForEachAsync(builds, _, async (build, _) => {
                 releases.Add(new Release {
                     Version = new Version {
                         Minecraft = version,
