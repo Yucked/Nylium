@@ -7,23 +7,25 @@ namespace Nylium.Tests;
 [TestClass]
 public sealed class MinecraftProviderTests {
     [TestMethod]
-    public async Task FabricReleasesTest() {
-        var provider = Statics.GetService<FabricProvider>();
-        var releases = await provider.GetReleasesAsync();
-        Assert.IsNotNull(releases);
+    public Task FabricReleasesTest() {
+        return TestProviderAsync(Statics.GetService<FabricProvider>());
     }
 
     [TestMethod]
-    public async Task VanillaReleasesTest() {
-        var provider = Statics.GetService<VanillaProvider>();
-        var releases = await provider.GetReleasesAsync();
-        Assert.IsNotNull(releases);
+    public Task VanillaReleasesTest() {
+        return TestProviderAsync(Statics.GetService<VanillaProvider>());
     }
 
     [TestMethod]
-    public async Task PaperReleasesAsync() {
-        var provider = Statics.GetService<PaperProvider>();
+    public Task PaperReleasesAsync() {
+        return TestProviderAsync(Statics.GetService<PaperProvider>());
+    }
+
+    private static async Task TestProviderAsync(IServerProvider provider) {
         var releases = await provider.GetReleasesAsync();
         Assert.IsNotNull(releases);
+        foreach (var release in releases) {
+            Statics.CheckRelease(release);
+        }
     }
 }
